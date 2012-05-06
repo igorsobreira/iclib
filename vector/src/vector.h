@@ -279,12 +279,33 @@ int vector_replace(vector *v, int position, const void *elem_ptr);
 /**
  * Function: vector_sort
  *
- * Sorts the vector into ascending order according to the supplied comparator
+ * Sorts the vector into ascending order according to the supplied comparator.
+ * The algorithm used is quicksort (qsort from stdlib.h)
  *
  * If ``cmp_func`` is NULL nothing is done
  *
  */
 void vector_sort(vector *v, vector_cmp_func cmp_func);
+
+/**
+ * Function: vector_map
+ *
+ * Iterate over the elements of the vector in order and calls a ``vector_map_function``
+ * passing each element as parameter.
+ *
+ * Parameters
+ *
+ *  ``map_func``
+ *    this function will be called for each element passing the element and ``data``
+ *    parameters. If this parameter is NULL, does the function does nothing.
+ *
+ *  ``data``
+ *    auxiliar data the client can pass to each ``map_func``
+ *
+ * Complexity: O(n)
+ *
+ */
+void vector_map(vector *v, vector_map_func map_func, void *data);
 
 /**
  * Function: vector_delete

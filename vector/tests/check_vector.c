@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdbool.h>
+#include <ctype.h>
 #include <check.h>
 #include "../src/vector.h"
 
@@ -14,6 +15,19 @@ int compare_ints(const void *num1, const void *num2)
   if (*(int *)num1 > *(int *)num2) return  1;
   if (*(int *)num1 < *(int *)num2) return -1;
   return 0;
+}
+
+void upper_string(void *string, void *data)
+{
+  char *str = *(char **)string;
+  int i;
+  for (i = 0; i < (int)strlen(str); i++)
+    str[i] = toupper(str[i]);
+
+  if (data != NULL) {
+    char *aux = (char *)data;
+    *aux = toupper(*aux);
+  }
 }
 
 START_TEST (new_should_fill_struct_with_defaults)
@@ -437,6 +451,56 @@ START_TEST (sort_does_nothing_if_compare_function_is_null)
 }
 END_TEST
 
+START_TEST (map_should_call_functionl_for_each_element)
+{
+  vector v;
+  char *name = strdup("igor");
+
+  vector_new(&v, sizeof(char *), free_string, 5);
+
+  vector_append(&v, &name);
+  vector_map(&v, upper_string, NULL);
+
+  fail_unless(strcmp("IGOR", *(char **)vector_get(&v, 0)) == 0);
+
+  vector_dispose(&v);
+}
+END_TEST
+
+START_TEST (map_should_call_functionl_for_each_element_passing_auxiliar_data)
+{
+  vector v;
+  char *name = strdup("igor");
+  char aux = 'a';
+
+  vector_new(&v, sizeof(char *), free_string, 5);
+
+  vector_append(&v, &name);
+  vector_map(&v, upper_string, &aux);
+
+  fail_unless(strcmp("IGOR", *(char **)vector_get(&v, 0)) == 0);
+  fail_unless('A' == aux);
+
+  vector_dispose(&v);
+}
+END_TEST
+
+START_TEST (map_does_nothing_if_map_function_is_null)
+{
+  vector v;
+  char *name = strdup("igor");
+
+  vector_new(&v, sizeof(char *), free_string, 5);
+
+  vector_append(&v, &name);
+  vector_map(&v, NULL, NULL);
+
+  fail_unless(strcmp("igor", *(char **)vector_get(&v, 0)) == 0);
+
+  vector_dispose(&v);
+}
+END_TEST
+
 START_TEST (delete_element_from_specific_position)
 {
   vector v;
@@ -551,6 +615,10 @@ vector_suite(void) {
 
   tcase_add_test(tc_vector, sort_should_sort_the_vector);
   tcase_add_test(tc_vector, sort_does_nothing_if_compare_function_is_null);
+
+  tcase_add_test(tc_vector, map_should_call_functionl_for_each_element);
+  tcase_add_test(tc_vector, map_should_call_functionl_for_each_element_passing_auxiliar_data);
+  tcase_add_test(tc_vector, map_does_nothing_if_map_function_is_null);
 
   tcase_add_test(tc_vector, delete_element_from_specific_position);
   tcase_add_test(tc_vector, delete_element_should_call_free_function);

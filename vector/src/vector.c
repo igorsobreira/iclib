@@ -142,6 +142,16 @@ vector_sort(vector *v, vector_cmp_func cmp_func)
   qsort(v->elems, v->length, v->elem_size, cmp_func);
 }
 
+void
+vector_map(vector *v, vector_map_func map_func, void *data)
+{
+  if (map_func == NULL) return;
+
+  unsigned int i;
+  for (i = 0; i < v->length; i++)
+    map_func((char *)v->elems + i * v->elem_size, data);
+}
+
 int
 vector_delete(vector *v, int position)
 {
