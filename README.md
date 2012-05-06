@@ -8,6 +8,9 @@ A vector is type agnostic structure similar to a list that grows as needed.
 
 ### Running tests
 
+Install [check](http://check.sourceforge.net/), unit tests framework.
+Now you can run the lib tests:
+
     $ cd vector
     $ make
 
