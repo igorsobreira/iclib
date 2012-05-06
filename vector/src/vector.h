@@ -97,7 +97,7 @@ typedef struct {
  * ``vector_free_func``
  *   function that will be called on an element that is about to be deleted
  *   (using ``vector_delete``) or on each element in the vector when the entire
- *   vector is being freed (using ``vector_dispose``). This function.
+ *   vector is being freed (using ``vector_free``). This function.
  *   Should be NULL  if the elements don't require any special handling.
  *
  * ``initial``
@@ -123,7 +123,7 @@ typedef struct {
  *   a vector * on success
  *   NULL if ``elem_size`` or ``initial`` are 0 (zero)
  *
- * Note that the call to ``vector_dispose`` is mandatory
+ * Note that the call to ``vector_free`` is mandatory
  *
  */
 vector* vector_new(size_t elem_size, vector_free_func free_func, int initial);
@@ -334,7 +334,7 @@ void vector_map(vector *v, vector_map_func map_func, void *data);
 int vector_delete(vector *v, int position);
 
 /**
- * Function: vector_dispose
+ * Function: vector_free
  *
  * Frees up all the memory of the specified vector and its elements.
  * ``vector_free_func`` will be called for all elements in the vector.
@@ -342,6 +342,6 @@ int vector_delete(vector *v, int position);
  * Complexity: O(n), if ``vector_free_func`` is NULL then it's O(1)
  *
  */
-void vector_dispose(vector *v);
+void vector_free(vector *v);
 
 #endif

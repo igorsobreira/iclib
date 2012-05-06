@@ -178,7 +178,7 @@ vector_delete(vector *v, int position)
 }
 
 void
-vector_dispose(vector *v)
+vector_free(vector *v)
 {
   if (v == NULL) return;
 

@@ -47,7 +47,7 @@ START_TEST (new_should_fill_struct_with_defaults)
   fail_if(v->elems == NULL,
           ".elems should be `malloc`ed for the correct size");
 
-  vector_dispose(v);
+  vector_free(v);
 }
 END_TEST
 
@@ -61,7 +61,7 @@ START_TEST (new_should_return_error_if_invalid_elem_size_or_initial)
   v = vector_new(sizeof(int), NULL, 0);
   fail_unless(v == NULL, "should fail if invalid initial");
 
-  vector_dispose(v);
+  vector_free(v);
 }
 END_TEST
 
@@ -81,7 +81,7 @@ START_TEST (should_append_and_get_one_element)
   fail_if(found == NULL, "get() should not return NULL (or nothing)");
   fail_unless(*found == 42, "get() should return first element");
 
-  vector_dispose(v);
+  vector_free(v);
 }
 END_TEST
 
@@ -103,7 +103,7 @@ START_TEST (should_append_and_get_multiple_elements)
   fail_unless(*found1 == 21, "invalid element found at 0: %d", *found1);
   fail_unless(*found2 == 37, "invalid element found at 1: %d", *found2);
 
-  vector_dispose(v);
+  vector_free(v);
 }
 END_TEST
 
@@ -131,7 +131,7 @@ START_TEST (append_should_grown_if_needed)
   fail_unless(*found3 == 30, "element 2 should be 30 not %d", *found3);
   fail_unless(*found4 == 40, "element 3 should be 40 not %d", *found4);
 
-  vector_dispose(v);
+  vector_free(v);
 }
 END_TEST
 
@@ -148,7 +148,7 @@ START_TEST (get_should_fail_if_invalid_index)
   found2 = vector_get(v, -3);
   fail_unless(found2 == NULL, "negative index should return NULL");
 
-  vector_dispose(v);
+  vector_free(v);
 }
 END_TEST
 
@@ -165,7 +165,7 @@ START_TEST (should_use_free_function_to_dealloc_elemns)
 
   fail_unless(*found == rb);
 
-  vector_dispose(v);
+  vector_free(v);
 
 }
 END_TEST
@@ -189,7 +189,7 @@ START_TEST (insert_element_in_the_beginning)
   fail_unless(py == *(char **)vector_get(v, 1));
   fail_unless(rb == *(char **)vector_get(v, 2));
 
-  vector_dispose(v);
+  vector_free(v);
 }
 END_TEST
 
@@ -213,7 +213,7 @@ START_TEST (insert_elements_in_all_positions)
   fail_unless(move3 == *(char **)vector_get(v, 2));
   fail_unless(move4 == *(char **)vector_get(v, 3));
 
-  vector_dispose(v);
+  vector_free(v);
 }
 END_TEST
 
@@ -233,7 +233,7 @@ START_TEST (insert_fails_if_position_bigger_than_length_or_negative)
   fail_unless(rc == VECT_INSERT_INVALID_POSITION);
   fail_unless(vector_length(v) == 0);
 
-  vector_dispose(v);
+  vector_free(v);
 }
 END_TEST
 
@@ -255,7 +255,7 @@ START_TEST (insert_should_grow_if_needed)
   fail_unless(3 == *(int *)vector_get(v, 2));
   fail_unless(4 == *(int *)vector_get(v, 3));
 
-  vector_dispose(v);
+  vector_free(v);
 }
 END_TEST
 
@@ -277,7 +277,7 @@ START_TEST (search_should_return_element_position)
   fail_unless(vector_search(v, &num2, compare_ints, 0, true) == 1);
   fail_unless(vector_search(v, &num3, compare_ints, 0, true) == 2);
 
-  vector_dispose(v);
+  vector_free(v);
 }
 END_TEST
 
@@ -293,7 +293,7 @@ START_TEST (search_should_fail_if_element_not_found)
   fail_unless(vector_search(v, &num3, compare_ints, 0, false) == VECT_SEARCH_NOT_FOUND);
   fail_unless(vector_search(v, &num3, compare_ints, 0, true) == VECT_SEARCH_NOT_FOUND);
 
-  vector_dispose(v);
+  vector_free(v);
 }
 END_TEST
 
@@ -304,7 +304,7 @@ START_TEST (search_should_fail_if_invalid_key)
   vector *v = vector_new(sizeof(int *), NULL, 5);
   fail_unless(vector_search(v, NULL, compare_ints, 0, false) == VECT_SEARCH_INVALID_KEY);
 
-  vector_dispose(v);
+  vector_free(v);
 }
 END_TEST
 
@@ -328,7 +328,7 @@ START_TEST (search_should_ignore_everything_before_start_parameter)
   fail_unless(vector_search(v, &num2, compare_ints, 2, true) == VECT_SEARCH_NOT_FOUND);
   fail_unless(vector_search(v, &num5, compare_ints, 2, true) == 4);
 
-  vector_dispose(v);
+  vector_free(v);
 }
 END_TEST
 
@@ -347,7 +347,7 @@ START_TEST (search_should_fail_if_invalid_start_parameter)
   fail_unless(vector_search(v, &num1, compare_ints, -2, true) == VECT_SEARCH_INVALID_START);
   fail_unless(vector_search(v, &num2, compare_ints, 3, true) == VECT_SEARCH_INVALID_START);
 
-  vector_dispose(v);
+  vector_free(v);
 }
 END_TEST
 
@@ -365,7 +365,7 @@ START_TEST (replace_element_on_specific_position)
   fail_unless(elem1 == *(char *)vector_get(v, 0));
   fail_unless(elem3 == *(char *)vector_get(v, 1));
 
-  vector_dispose(v);
+  vector_free(v);
 }
 END_TEST
 
@@ -383,7 +383,7 @@ START_TEST (replace_element_should_call_free_function)
   fail_unless(vector_replace(v, 0, &elem3) == VECT_OK);
   fail_unless(elem3 == *(char **)vector_get(v, 0));
 
-  vector_dispose(v);
+  vector_free(v);
 }
 END_TEST
 
@@ -398,7 +398,7 @@ START_TEST (replace_element_should_fail_if_invalid_position)
   fail_unless(vector_replace(v, 1, &num2) == VECT_REPLACE_INVALID_POSITION);
   fail_unless(vector_replace(v, -3, &num2) == VECT_REPLACE_INVALID_POSITION);
 
-  vector_dispose(v);
+  vector_free(v);
 }
 END_TEST
 
@@ -422,7 +422,7 @@ START_TEST (sort_should_sort_the_vector)
   fail_unless(*(int *)vector_get(v, 3) == num4);
   fail_unless(*(int *)vector_get(v, 4) == num5);
 
-  vector_dispose(v);
+  vector_free(v);
 }
 END_TEST
 
@@ -440,7 +440,7 @@ START_TEST (sort_does_nothing_if_compare_function_is_null)
   fail_unless(*(int *)vector_get(v, 0) == num2);
   fail_unless(*(int *)vector_get(v, 1) == num1);
 
-  vector_dispose(v);
+  vector_free(v);
 }
 END_TEST
 
@@ -456,7 +456,7 @@ START_TEST (map_should_call_functionl_for_each_element)
 
   fail_unless(strcmp("IGOR", *(char **)vector_get(v, 0)) == 0);
 
-  vector_dispose(v);
+  vector_free(v);
 }
 END_TEST
 
@@ -474,7 +474,7 @@ START_TEST (map_should_call_functionl_for_each_element_passing_auxiliar_data)
   fail_unless(strcmp("IGOR", *(char **)vector_get(v, 0)) == 0);
   fail_unless('A' == aux);
 
-  vector_dispose(v);
+  vector_free(v);
 }
 END_TEST
 
@@ -490,7 +490,7 @@ START_TEST (map_does_nothing_if_map_function_is_null)
 
   fail_unless(strcmp("igor", *(char **)vector_get(v, 0)) == 0);
 
-  vector_dispose(v);
+  vector_free(v);
 }
 END_TEST
 
@@ -511,7 +511,7 @@ START_TEST (delete_element_from_specific_position)
   fail_unless(*(int *)vector_get(v, 0) == num1);
   fail_unless(initial_alloc_length == v->alloc_length);
 
-  vector_dispose(v);
+  vector_free(v);
 }
 END_TEST
 
@@ -529,7 +529,7 @@ START_TEST (delete_element_should_call_free_function)
 
   fail_unless(vector_delete(v, 2) == VECT_OK);
 
-  vector_dispose(v);
+  vector_free(v);
 }
 END_TEST
 
@@ -558,7 +558,7 @@ START_TEST (delete_element_should_shift_elements)
   fail_unless(elem1 == sport3, "element on `2' should go to `1'. found '%s'", elem1);
   fail_unless(elem2 == sport4, "element on `3' should go to `2'. found '%s'", elem2);
 
-  vector_dispose(v);
+  vector_free(v);
 }
 END_TEST
 
@@ -573,7 +573,7 @@ START_TEST (delete_element_should_fail_if_invalid_position)
   fail_unless(vector_delete(v, 2) == VECT_DELETE_INVALID_POSITION);
   fail_unless(vector_delete(v, -2) == VECT_DELETE_INVALID_POSITION);
 
-  vector_dispose(v);
+  vector_free(v);
 }
 END_TEST
 

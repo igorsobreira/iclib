@@ -36,7 +36,7 @@ int main(void) {
   
   printf("%s \n", *(char **)vector_get(&v, 0));
 
-  vector_dispose(&v);
+  vector_free(&v);
   return EXIT_SUCCESS;
 }
 ```

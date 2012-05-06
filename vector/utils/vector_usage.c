@@ -14,7 +14,7 @@ int main(void)
   vector_append(v, &num);
   vector_append(v, &num);
 
-  vector_dispose(v);
+  vector_free(v);
 
   return 0;
 }
