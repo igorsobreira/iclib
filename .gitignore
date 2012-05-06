@@ -1,0 +1,5 @@
+objs
+test
+a.out
+*.o
+util
