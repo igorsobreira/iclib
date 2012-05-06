@@ -28,15 +28,14 @@ void free_string(void *string) {
 }
 
 int main(void) {
-  vector v;
-  vector_new(&v, sizeof(char *), free_string, 10);
+  vector *v = vector_new(sizeof(char *), free_string, 10);
   
   char *name = strdup("Igor");
-  vector_append(&v, &name);
+  vector_append(v, &name);
   
-  printf("%s \n", *(char **)vector_get(&v, 0));
+  printf("%s \n", *(char **)vector_get(v, 0));
 
-  vector_free(&v);
+  vector_free(v);
   return EXIT_SUCCESS;
 }
 ```
