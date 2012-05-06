@@ -4,17 +4,19 @@
 #include <assert.h>
 #include "vector.h"
 
-int
-vector_new(vector *v, size_t elem_size, vector_free_func free_func, int initial)
+vector *
+vector_new(size_t elem_size, vector_free_func free_func, int initial)
 {
-  if (elem_size == 0 || initial == 0) return VECT_INVALID_SIZE;
+  if (elem_size == 0 || initial == 0) return NULL;
+
+  vector *v = malloc(sizeof(vector));
   v->elem_size = elem_size;
   v->step = initial;
   v->free_func = free_func;
   v->length = 0;
   v->alloc_length = initial;
   v->elems = calloc(initial, elem_size);
-  return VECT_OK;
+  return v;
 }
 
 size_t
@@ -178,6 +180,8 @@ vector_delete(vector *v, int position)
 void
 vector_dispose(vector *v)
 {
+  if (v == NULL) return;
+
   if (v->free_func != NULL) {
     int i;
     for (i = 0; i < (int)v->length; i++) {
@@ -185,4 +189,5 @@ vector_dispose(vector *v)
     }
   }
   free(v->elems);
+  free(v);
 }

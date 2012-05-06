@@ -22,11 +22,10 @@ enum {
   VECT_SEARCH_NOT_FOUND = -1,
   VECT_SEARCH_INVALID_KEY = -2,
   VECT_SEARCH_INVALID_START = -3,
-  VECT_INVALID_SIZE = -4,
-  VECT_INSERT_INVALID_POSITION = -5,
-  VECT_REPLACE_INVALID_POSITION = -6,
-  VECT_DELETE_INVALID_POSITION = -7,
-} vector_retstatus;
+  VECT_INSERT_INVALID_POSITION = -4,
+  VECT_REPLACE_INVALID_POSITION = -5,
+  VECT_DELETE_INVALID_POSITION = -6,
+};
 
 /**
  * Type: vector_cmp_func
@@ -84,8 +83,7 @@ typedef struct {
 
 /**
  * Function: vector_new
- * Usage: vector my_friends;
- *        vector_new(&my_friends, sizeof(char *), string_free, 10);
+ * Usage: vector *my_friends = vector_new(sizeof(char *), string_free, 10);
  *
  * Constructs a raw or previously destroyed vector to be the empty vector.
  *
@@ -122,11 +120,13 @@ typedef struct {
  *
  * Returns
  *
- *   VOK on success
- *   VECT_INVALID_SIZE if ``elem_size`` or ``initial`` are 0 (zero)
+ *   a vector * on success
+ *   NULL if ``elem_size`` or ``initial`` are 0 (zero)
+ *
+ * Note that the call to ``vector_dispose`` is mandatory
  *
  */
-int vector_new(vector *v, size_t elem_size, vector_free_func free_func, int initial);
+vector* vector_new(size_t elem_size, vector_free_func free_func, int initial);
 
 /**
  * Function: vector_length
