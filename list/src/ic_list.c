@@ -69,7 +69,7 @@ void * ic_list_last(ic_list *l)
   return NULL;
 }
 
-void * ic_list_nth(ic_list *l, size_t n)
+ic_node * ic_list_nth(ic_list *l, size_t n)
 {
   ic_node *tmp, *node = l->head;
   size_t jumps = 0;
@@ -82,6 +82,13 @@ void * ic_list_nth(ic_list *l, size_t n)
     jumps++;
   }
 
+  return node;
+}
+
+void * ic_list_nth_data(ic_list *l, size_t n)
+{
+  ic_node *node = ic_list_nth(l, n);
+  if (node == NULL) return NULL;
   return node->data;
 }
 

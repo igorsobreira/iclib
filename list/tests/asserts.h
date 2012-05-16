@@ -31,7 +31,7 @@ void assert_list_elements(ic_list *list, ...)
 
   while (n < ic_list_length(list)) {
     element = va_arg(argptr, void *);
-    fail_unless(memcmp(element, ic_list_nth(list, n), sizeof(element)) == 0,
+    fail_unless(memcmp(element, ic_list_nth_data(list, n), sizeof(element)) == 0,
                 "element at index %d doesn't match", n);
     n++;
   }

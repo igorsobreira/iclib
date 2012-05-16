@@ -8,6 +8,8 @@
 /**
  * List and Node types
  *
+ * You should *not* access any element of these structs directly
+ *
  * Note that each ic_node (list item) stores a pointer to the
  * element you added to the list. Your data is not copied to the
  * list, it stores just a pointer to your data.
@@ -68,8 +70,13 @@ void * ic_list_last(ic_list *l);
 /**
  * Returns the element at the given position, NULL if the position is off the end
  */
-void * ic_list_nth(ic_list *l, size_t n);
+ic_node * ic_list_nth(ic_list *l, size_t n);
 
+/**
+ * Returns the data from element at the given position, NULL if the position
+ * is off the end
+ */
+void * ic_list_nth_data(ic_list *l, size_t n);
 
 /**
  * Frees all elements from the list
