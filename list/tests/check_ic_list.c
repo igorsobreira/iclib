@@ -15,20 +15,21 @@ END_TEST
 START_TEST (append_one_element_should_make_it_head_and_tail)
 {
   int num1 = 10;
-  int found;
+  int *head, *tail;
 
   ic_list *mylist = ic_list_new();
   ic_list_append(mylist, &num1);
 
-  fail_unless(ic_list_first(mylist) != NULL);
-  fail_unless(ic_list_last(mylist) != NULL);
+  head = ic_list_first(mylist);
+  tail = ic_list_last(mylist);
+
   fail_unless(ic_list_length(mylist) == 1);
 
-  found = *(int *)ic_list_first(mylist);
-  fail_unless(found == num1, "expected %d, found %d", num1, found);
+  fail_unless(head != NULL);
+  fail_unless(*head == num1, "expected %d, found %d", num1, *head);
 
-  found = *(int *)ic_list_last(mylist);
-  fail_unless(found == num1, "expected %d, found %d", num1, found);
+  fail_unless(tail != NULL);
+  fail_unless(*tail == num1, "expected %d, found %d", num1, *tail);
 
   ic_list_free(mylist);
 }
