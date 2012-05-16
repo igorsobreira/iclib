@@ -79,6 +79,12 @@ ic_node * ic_list_nth(ic_list *l, size_t n);
 void * ic_list_nth_data(ic_list *l, size_t n);
 
 /**
+ * Returns the element which contains the given data. NULL if not found.
+ * Comparison is made using memcmp().
+ */
+ic_node * ic_list_find(ic_list *l, void *data);
+
+/**
  * Frees all elements from the list
  */
 void ic_list_free(ic_list *l);

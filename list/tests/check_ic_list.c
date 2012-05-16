@@ -96,6 +96,34 @@ START_TEST (nth_should_return_element_data_at_that_position_or_NULL_if_out_of_bo
 }
 END_TEST
 
+/* find */
+
+START_TEST (find_should_return_matched_element_or_NULL_if_not_found)
+{
+  int num1 = 20, num2 = 23, num3 = 43, num4 = 100;
+  ic_node *found;
+
+  ic_list *mylist = ic_list_new();
+  ic_list_append(mylist, &num1);
+  ic_list_append(mylist, &num2);
+  ic_list_append(mylist, &num3);
+
+  found = ic_list_find(mylist, &num1);
+  fail_unless(found != NULL);
+  fail_unless(*(int *)found->data == num1);
+
+  found = ic_list_find(mylist, &num2);
+  fail_unless(found != NULL);
+  fail_unless(*(int *)found->data == num2);
+
+  found = ic_list_find(mylist, &num4);
+  fail_unless(found == NULL);
+
+  ic_list_free(mylist);
+}
+END_TEST
+
+
 Suite *ic_list_suite(void) {
   Suite *s = suite_create("list");
   TCase *tc_list = tcase_create("list");
@@ -108,6 +136,8 @@ Suite *ic_list_suite(void) {
   tcase_add_test(tc_list, prepend_many_elements);
 
   tcase_add_test(tc_list, nth_should_return_element_data_at_that_position_or_NULL_if_out_of_bounds);
+
+  tcase_add_test(tc_list, find_should_return_matched_element_or_NULL_if_not_found);
 
   suite_add_tcase(s, tc_list);
 

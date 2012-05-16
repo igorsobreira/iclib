@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <string.h>
 #include "ic_list.h"
 
 ic_list * ic_list_new(void)
@@ -90,6 +91,19 @@ void * ic_list_nth_data(ic_list *l, size_t n)
   ic_node *node = ic_list_nth(l, n);
   if (node == NULL) return NULL;
   return node->data;
+}
+
+ic_node * ic_list_find(ic_list *l, void *data)
+{
+  size_t n = 0;
+  ic_node *node = NULL;
+
+  while (n < ic_list_length(l)) {
+    node = ic_list_nth(l, n);
+    if (memcmp(data, node->data, sizeof(void *)) == 0) return node;
+    n++;
+  }
+  return NULL;
 }
 
 void ic_list_free(ic_list *l)
