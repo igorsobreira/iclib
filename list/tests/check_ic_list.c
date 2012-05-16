@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <check.h>
 #include "../src/ic_list.h"
+#include "asserts.h"
 
 START_TEST (new_ic_list_should_be_empty)
 {
@@ -12,24 +13,16 @@ START_TEST (new_ic_list_should_be_empty)
 }
 END_TEST
 
+/* append */
+
 START_TEST (append_one_element_should_make_it_head_and_tail)
 {
-  int num1 = 10;
-  int *head, *tail;
-
+  int num = 10;
   ic_list *mylist = ic_list_new();
-  ic_list_append(mylist, &num1);
+  ic_list_append(mylist, &num);
 
-  head = ic_list_first(mylist);
-  tail = ic_list_last(mylist);
-
-  fail_unless(ic_list_length(mylist) == 1);
-
-  fail_unless(head != NULL);
-  fail_unless(*head == num1, "expected %d, found %d", num1, *head);
-
-  fail_unless(tail != NULL);
-  fail_unless(*tail == num1, "expected %d, found %d", num1, *tail);
+  assert_list_has_only_one_element(mylist, &num, sizeof(int *));
+  assert_list_bounds(mylist);
 
   ic_list_free(mylist);
 }
@@ -38,27 +31,47 @@ END_TEST
 START_TEST (append_many_elements)
 {
   int num1 = 12, num2 = 30, num3 = 42;
-  int *head, *middle, *tail;
 
   ic_list *mylist = ic_list_new();
   ic_list_append(mylist, &num1);
   ic_list_append(mylist, &num2);
   ic_list_append(mylist, &num3);
 
-  fail_unless(ic_list_length(mylist) == 3);
+  fail_unless(ic_list_length(mylist), 3);
+  assert_list_elements(mylist, &num1, &num2, &num3);
+  assert_list_bounds(mylist);
 
-  head = ic_list_first(mylist);
-  tail = ic_list_last(mylist);
-  middle = mylist->head->next->data;
+  ic_list_free(mylist);
+}
+END_TEST
 
-  fail_unless(head != NULL, "head should not me NULL");
-  fail_unless(*head == num1, "expected %d, found %d", num1, *head);
+/* prepend */
 
-  fail_unless(middle != NULL, "second element should not be NULL");
-  fail_unless(*middle == num2, "expected %d, found %d", num2, *middle);
+START_TEST (prepend_one_element_should_make_it_head_and_tail)
+{
+  int num = 20;
+  ic_list *mylist = ic_list_new();
+  ic_list_prepend(mylist, &num);
 
-  fail_unless(tail != NULL, "tail should not be NULL");
-  fail_unless(*tail == num3, "expected %d, found %d", num3, *tail);
+  assert_list_has_only_one_element(mylist, &num, sizeof(int *));
+  assert_list_bounds(mylist);
+
+  ic_list_free(mylist);
+}
+END_TEST
+
+START_TEST (prepend_many_elements)
+{
+  int num1 = 12, num2 = 30, num3 = 42;
+
+  ic_list *mylist = ic_list_new();
+  ic_list_prepend(mylist, &num3);
+  ic_list_prepend(mylist, &num2);
+  ic_list_prepend(mylist, &num1);
+
+  fail_unless(ic_list_length(mylist), 3);
+  assert_list_elements(mylist, &num1, &num2, &num3);
+  assert_list_bounds(mylist);
 
   ic_list_free(mylist);
 }
@@ -71,6 +84,9 @@ Suite *ic_list_suite(void) {
   tcase_add_test(tc_list, new_ic_list_should_be_empty);
   tcase_add_test(tc_list, append_one_element_should_make_it_head_and_tail);
   tcase_add_test(tc_list, append_many_elements);
+
+  tcase_add_test(tc_list, prepend_one_element_should_make_it_head_and_tail);
+  tcase_add_test(tc_list, prepend_many_elements);
 
   suite_add_tcase(s, tc_list);
 

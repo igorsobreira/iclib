@@ -7,6 +7,13 @@
 
 /**
  * List and Node types
+ *
+ * Note that each ic_node (list item) stores a pointer to the
+ * element you added to the list. Your data is not copied to the
+ * list, it stores just a pointer to your data.
+ * You need to make sure this data remais valid while the list is
+ * in use.
+ *
  */
 typedef struct ic_node {
   struct ic_node *prev;
@@ -44,6 +51,11 @@ size_t ic_list_length(ic_list *l);
 void ic_list_append(ic_list *l, void *data);
 
 /**
+ * Add one element to the head of the list
+ */
+void ic_list_prepend(ic_list *l, void *data);
+
+/**
  * Return element from head of the list. NULL if list is empty
  */
 void * ic_list_first(ic_list *l);
@@ -52,6 +64,12 @@ void * ic_list_first(ic_list *l);
  * Return element from tail of the list. NULL if list is empty
  */
 void * ic_list_last(ic_list *l);
+
+/**
+ * Returns the element at the given position, NULL if the position is off the end
+ */
+void * ic_list_nth(ic_list *l, size_t n);
+
 
 /**
  * Frees all elements from the list

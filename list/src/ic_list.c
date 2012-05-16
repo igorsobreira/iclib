@@ -24,16 +24,33 @@ void ic_list_append(ic_list *l, void *data)
 {
   ic_node *n = malloc(sizeof(ic_node));
   n->data = data;
+  n->next = NULL;
 
   if (ic_list_empty(l)) {
     n->prev = NULL;
-    n->next = NULL;
     l->head = n;
     l->tail = n;
   } else {
     l->tail->next = n;
     n->prev = l->tail;
     l->tail = n;
+  }
+  l->length++;
+}
+
+void ic_list_prepend(ic_list *l, void *data)
+{
+  ic_node *n = malloc(sizeof(ic_node));
+  n->data = data;
+  n->prev = NULL;
+
+  if (ic_list_empty(l)) {
+    l->head = n;
+    l->tail = n;
+    n->next = NULL;
+  } else {
+    n->next = l->head;
+    l->head = n;
   }
   l->length++;
 }
@@ -50,6 +67,20 @@ void * ic_list_last(ic_list *l)
   if (l->tail != NULL)
     return l->tail->data;
   return NULL;
+}
+
+void * ic_list_nth(ic_list *l, size_t n)
+{
+  ic_node *tmp, *node = l->head;
+  size_t jumps = 0;
+
+  while (jumps < n) {
+    tmp = node->next;
+    node = tmp;
+    jumps++;
+  }
+
+  return node->data;
 }
 
 void ic_list_free(ic_list *l)
