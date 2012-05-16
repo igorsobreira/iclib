@@ -74,6 +74,8 @@ void * ic_list_nth(ic_list *l, size_t n)
   ic_node *tmp, *node = l->head;
   size_t jumps = 0;
 
+  if (n >= ic_list_length(l)) return NULL;
+
   while (jumps < n) {
     tmp = node->next;
     node = tmp;

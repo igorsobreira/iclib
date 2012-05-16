@@ -77,6 +77,25 @@ START_TEST (prepend_many_elements)
 }
 END_TEST
 
+/* nth */
+
+START_TEST (nth_should_return_element_at_that_position_or_NULL_if_out_of_bounds)
+{
+  int num1 = 1, num2 = 2;
+  ic_list *mylist = ic_list_new();
+
+  ic_list_append(mylist, &num1);
+  ic_list_append(mylist, &num2);
+
+  fail_unless(*(int *)ic_list_nth(mylist, 0) == num1);
+  fail_unless(*(int *)ic_list_nth(mylist, 1) == num2);
+  fail_unless(ic_list_nth(mylist, 2) == NULL);
+  fail_unless(ic_list_nth(mylist, 10) == NULL);
+
+  ic_list_free(mylist);
+}
+END_TEST
+
 Suite *ic_list_suite(void) {
   Suite *s = suite_create("list");
   TCase *tc_list = tcase_create("list");
@@ -87,6 +106,8 @@ Suite *ic_list_suite(void) {
 
   tcase_add_test(tc_list, prepend_one_element_should_make_it_head_and_tail);
   tcase_add_test(tc_list, prepend_many_elements);
+
+  tcase_add_test(tc_list, nth_should_return_element_at_that_position_or_NULL_if_out_of_bounds);
 
   suite_add_tcase(s, tc_list);
 
